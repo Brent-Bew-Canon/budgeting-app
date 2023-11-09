@@ -4,27 +4,47 @@ import Header from './components/Header';
 import Total from './components/Total';
 import BudgetProvider from './context/Context';
 import Footer from './components/Footer';
+import Add_Category from './components/Add_Category';
+import Add_Transaction from './components/Add_Transaction';
 import * as bootstrap from 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 function App() {
+  const [storeVals, setStoreVals] = useState([]);
 
-  let food = {
-    categoryName: "Food", categoryTotal: 25, transactions: [
+
+  useEffect(() => {
+    let data = localStorage.getItem('categories');
+    if (data) {
+      setStoreVals(JSON.parse(data));
+    }
+  }, [])
+
+
+
+  // let categories = [food, entertainment, gas]
+  let categories = [{
+    categoryName: "Entertainment", transactions: [
+      { name: "Cinemark", amount: 15 },
+      { name: "Top Golf", amount: 15 },
+    ]
+  }, {
+    categoryName: "Food", transactions: [
       { name: "Wendys", amount: 11 },
       { name: "McDonalds", amount: 15 },
       { name: "Burger King", amount: 20 }
-    ],
-    color: "blue"
-  }
+    ]
+  }]
 
-  let entertainment = {
-    categoryName: "Entertainment", categoryTotal: 30, transactions: [
-      { name: "Cinemark", amount: 15 },
-      { name: "Top Golf", amount: 15 },
-    ],
-    color: "red"
+  const loopCategories = () => {
+    return (storeVals.length > 0 ?
+      storeVals.map((category, index) => {
+        return <Category key={index} category={category} />
+      })
+      :
+      <></>
+    )
   }
 
   return (
@@ -32,8 +52,9 @@ function App() {
       <BudgetProvider>
         <Header />
         <Total />
-        <Category category={food} />
-        <Category category={entertainment} />
+        {loopCategories()}
+        <Add_Category />
+        <Add_Transaction />
         <Footer />
       </BudgetProvider>
     </>

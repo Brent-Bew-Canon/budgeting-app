@@ -5,7 +5,7 @@ function Total() {
 
     const { total, calculateTotal } = useContext(BudgetContext);
 
-    calculateTotal()
+    // calculateTotal()
 
 
     return (

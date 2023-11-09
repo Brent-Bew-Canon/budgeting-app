@@ -6,7 +6,21 @@ const BudgetContextProvider = (props) => {
     const [total, setTotal] = useState(0);
     const [categoryTotal, setCategoryTotal] = useState([]);
 
+    // function to save new data to local storage by appending to the existing data
+    const saveToLocalStorage = (key, value) => {
+        let existing = localStorage.getItem(key);
+        existing = existing ? JSON.parse(existing) : [];
+        existing.push(value);
+        localStorage.setItem(key, JSON.stringify(existing));
+    };
 
+    // save new transactions to the transactions array in the categories object by using the passed in index for the category   
+    const saveTransaction = (index, transaction) => {
+        let existing = localStorage.getItem('categories');
+        existing = existing ? JSON.parse(existing) : [];
+        existing[index].transactions.push(transaction);
+        localStorage.setItem('categories', JSON.stringify(existing));
+    };
 
     //  function to update the category total object by adding key-value pairs
     const addToCat = (key, value) => {
@@ -26,7 +40,7 @@ const BudgetContextProvider = (props) => {
     }, [categoryTotal]);
 
     return (
-        <BudgetContext.Provider value={{ total, addToCat, calculateTotal }} {...props} />
+        <BudgetContext.Provider value={{ total, addToCat, calculateTotal, saveToLocalStorage, saveTransaction }} {...props} />
     )
 }
 
