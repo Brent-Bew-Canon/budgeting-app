@@ -30,9 +30,9 @@ function Category(props) {
 
     return (
         <>
-            <div className="container">
+            <div className="container mt-3">
                 <div className="row">
-                    <div className="col-12 col-md-7 d-flex flex-row justify-content-between mx-auto bg-primary py-3 text-white px-5">
+                    <div className="col-12 col-md-7 d-flex flex-row justify-content-between mx-auto pt-3 text-white px-5 rounded-pill" style={{ backgroundColor: props.backgroundColor, padding: '10px', margin: '5px' }}>
                         <p className="fs-3">{props.category.categoryName}</p>
                         <p className="fs-3">${catTotal}</p>
                     </div>

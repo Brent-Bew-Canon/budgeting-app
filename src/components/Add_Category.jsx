@@ -21,12 +21,18 @@ function Add_Category() {
 
     return (
         <>
-            <div className="container py-4">
-                <div className="row">
-                    <div className="col-6 mx-auto text-center">
-                        <form onSubmit={handleSubmit}>
-                            <input type="text" placeholder="Name" className='my-2 form-control' value={storeCat.categoryame} onChange={(e) => { setStoreCat({ categoryName: e.target.value, transactions: [] }) }} />
-                            <button type='submit'>Add New Category</button>
+            <div className="container py-4 mt-3">
+                <div className="row ">
+                    <div className="col-12 col-md-7 mx-auto  py-3  px-5 rounded">
+                        <h2 className="text-center ">Create New Category</h2>
+                        <hr className="pb-3" />
+                        <form onSubmit={handleSubmit} >
+                            <div className=" col-12 col-md-6 mx-auto">
+                                <input type="text" placeholder="Category Name" className='my-2 form-control fs-5' value={storeCat.categoryName} onChange={(e) => { setStoreCat({ categoryName: e.target.value, transactions: [] }) }} />
+                            </div>
+                            <div className="text-center">
+                                <button type='submit' className="btn btn-secondary fs-5 mt-2">Add New Category</button>
+                            </div>
                         </form>
                     </div>
                 </div>

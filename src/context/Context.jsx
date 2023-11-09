@@ -31,7 +31,7 @@ const BudgetContextProvider = (props) => {
     };
 
     // function to update the total by adding up the category totals
-    const calculateTotal = useCallback(() => {
+    const calculateGrandTotal = useCallback(() => {
         let total = 0;
         Object.values(categoryTotal).forEach((value) => {
             total += value;
@@ -40,7 +40,7 @@ const BudgetContextProvider = (props) => {
     }, [categoryTotal]);
 
     return (
-        <BudgetContext.Provider value={{ total, addToCat, calculateTotal, saveToLocalStorage, saveTransaction }} {...props} />
+        <BudgetContext.Provider value={{ total, addToCat, calculateGrandTotal, saveToLocalStorage, saveTransaction }} {...props} />
     )
 }
 

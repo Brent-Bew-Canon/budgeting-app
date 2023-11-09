@@ -51,19 +51,27 @@ function Add_Transaction() {
 
     return (
         <>
-            <div className="container py-4 border border-2">
+            <div className="container py-4">
                 <div className="row">
-                    <div className="col-6 mx-auto text-center">
+                    <div className="col-12 col-md-7 mx-auto  py-3  px-5 rounded">
+                        <h2 className="text-center ">Create New Transaction</h2>
+                        <hr className="pb-3" />
                         <form onSubmit={handleSubmit}>
-                            <div>
-                                <select className='my-2 form-control' onChange={(e) => { setCategory(e.target.value) }}>
+                            <div className=" col-12 col-md-6 mx-auto">
+                                <select className='my-2 form-select fs-5' onChange={(e) => { setCategory(e.target.value) }}>
                                     <option>Select Category</option>
                                     {loopCategories()}
                                 </select>
                             </div>
-                            <input name="transactionName" type="text" placeholder="Name" className='my-2 form-control' value={transactionName} onChange={(e) => { setTransactionName(e.target.value) }} />
-                            <input name="transactionAmount" type="number" placeholder="Amount" className='my-2 form-control' value={transactionAmount} onChange={(e) => { setTransactionAmount(e.target.value) }} />
-                            <button type='submit'>Add New Transaction</button>
+                            <div className=" col-12 col-md-6 mx-auto">
+                                <input name="transactionName" type="text" placeholder="Transaction Name" className='my-2 form-control fs-5' value={transactionName} onChange={(e) => { setTransactionName(e.target.value) }} />
+                            </div>
+                            <div className=" col-12 col-md-6 mx-auto">
+                                <input name="transactionAmount" type="number" placeholder="Amount" className='my-2 form-control fs-5' value={transactionAmount} onChange={(e) => { setTransactionAmount(e.target.value) }} />
+                            </div>
+                            <div className="text-center">
+                                <button type='submit' className=" btn btn-secondary fs-5  mt-2">Add New Transaction</button>
+                            </div>
                         </form>
                     </div>
                 </div>
