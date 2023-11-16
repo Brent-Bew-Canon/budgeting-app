@@ -1,6 +1,6 @@
 
 import Transactions from "./Transactions";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 
 import { BudgetContext } from "../context/Context";
 
@@ -15,18 +15,16 @@ function Category(props) {
             catTotal += amount
         });
         return catTotal;
-
     }
 
-    const [catTotal, setCatTotal] = useState(0);
+    const memoizedTotal = useMemo(() => calculateTotal(props.category.transactions), [props.category.transactions]);
 
     useEffect(() => {
-        const total = calculateTotal();
-        setCatTotal(total);
-        addToCat(props.category.categoryName, total);
-    }, [props.category.transactions]);
+        setCatTotal(memoizedTotal);
+        addToCat(props.category.categoryName, memoizedTotal);
+    }, [memoizedTotal, addToCat, props.category.categoryName]);
 
-
+    const [catTotal, setCatTotal] = useState(0);
 
     return (
         <>
