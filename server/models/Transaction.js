@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Sheet extends Model { }
+class Transaction extends Model { }
 
-Sheet.init(
+Transaction.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -11,32 +11,31 @@ Sheet.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        // include bookId foreign key to associate sheet with a book
-        book_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'book',
-                key: 'id',
-            },
-        },
         name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        grand_total: {
+        amount: {
             type: DataTypes.FLOAT,
-            allowNull: true,
-            defaultValue: 0,
+            allowNull: false,
         },
+        // include category_id foreign key to associate transaction with a caetgory
+        category_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'category',
+                key: 'id',
+            },
+        },
+        // Other fields for transactions
     },
     {
         sequelize,
         timestamps: false,
         freezeTableName: true,
         underscored: true,
-        modelName: 'sheet',
+        modelName: 'transaction',
     }
 );
 
-module.exports = Sheet;
-
+module.exports = Transaction;

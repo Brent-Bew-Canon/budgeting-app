@@ -1,6 +1,8 @@
 const User = require('./User');
 const Book = require('./Book');
 const Sheet = require('./Sheet');
+const Category = require('./Category');
+const Transaction = require('./Transaction');
 
 // Associations
 User.hasOne(Book, {
@@ -19,5 +21,21 @@ Sheet.belongsTo(Book, {
   foreignKey: 'book_id',
 });
 
-module.exports = { User, Book, Sheet };
+Sheet.hasMany(Category, {
+  foreignKey: 'sheet_id',
+});
+
+Category.belongsTo(Sheet, {
+  foreignKey: 'sheet_id',
+});
+
+Category.hasMany(Transaction, {
+  foreignKey: 'category_id',
+});
+
+Transaction.belongsTo(Category, {
+  foreignKey: 'category_id',
+});
+
+module.exports = { User, Book, Sheet, Category, Transaction };
 

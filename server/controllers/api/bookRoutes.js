@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: Sheet, // Include the Sheet model
-          attributes: ['id', 'name', 'grand_total', 'categories', 'transactions'], // Specify the attributes you want to retrieve from the Sheet model
+          attributes: ['id', 'name', 'grand_total'], // Specify the attributes you want to retrieve from the Sheet model
         },
         {
           model: User, // Include the User model

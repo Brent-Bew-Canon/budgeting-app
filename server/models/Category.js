@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Sheet extends Model { }
+class Category extends Model { }
 
-Sheet.init(
+Category.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -11,22 +11,23 @@ Sheet.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        // include bookId foreign key to associate sheet with a book
-        book_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'book',
-                key: 'id',
-            },
-        },
         name: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
         },
-        grand_total: {
+        total: {
             type: DataTypes.FLOAT,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0,
+        },
+        // include sheet_id foreign key to associate cateogry with a sheet
+        sheet_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'sheet',
+                key: 'id',
+            },
         },
     },
     {
@@ -34,9 +35,8 @@ Sheet.init(
         timestamps: false,
         freezeTableName: true,
         underscored: true,
-        modelName: 'sheet',
+        modelName: 'category',
     }
 );
 
-module.exports = Sheet;
-
+module.exports = Category;

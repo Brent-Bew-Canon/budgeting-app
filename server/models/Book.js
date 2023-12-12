@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-const Sheet = require('./Sheet');
 
 class Book extends Model { }
 
