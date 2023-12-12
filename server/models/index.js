@@ -1,13 +1,23 @@
 const User = require('./User');
-const MovieList = require('./MovieList');
-const SavedMovies = require('./SavedMovies');
+const Book = require('./Book');
+const Sheet = require('./Sheet');
 
-User.belongsTo(SavedMovies, {
+// Associations
+User.hasOne(Book, {
   foreignKey: 'user_id',
-  onDelete: 'CASCADE'
 });
 
-MovieList.belongsTo(User, {
-  foreignKey: 'user_id'
+Book.belongsTo(User, {
+  foreignKey: 'user_id',
 });
-module.exports = { User, MovieList, SavedMovies };
+
+Book.hasMany(Sheet, {
+  foreignKey: 'book_id',
+});
+
+Sheet.belongsTo(Book, {
+  foreignKey: 'book_id',
+});
+
+module.exports = { User, Book, Sheet };
+
