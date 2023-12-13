@@ -5,6 +5,7 @@ export const BudgetContext = createContext();
 const BudgetContextProvider = (props) => {
     const [total, setTotal] = useState(0);
     const [categoryTotal, setCategoryTotal] = useState([]);
+    const [currentSheet, setCurrentSheet] = useState({});
 
     const totalAPICall = async (theTotal) => {
         try {
@@ -24,6 +25,10 @@ const BudgetContextProvider = (props) => {
             }
         }
     }
+
+    const updateCurrentSheet = (sheet) => {
+        setCurrentSheet(sheet);
+    };
 
     // function to save new data to local storage by appending to the existing data
     const saveToLocalStorage = (key, value) => {
@@ -60,7 +65,7 @@ const BudgetContextProvider = (props) => {
     }, [categoryTotal]);
 
     return (
-        <BudgetContext.Provider value={{ total, addToCat, calculateGrandTotal, saveToLocalStorage, saveTransaction }} {...props} />
+        <BudgetContext.Provider value={{ total, addToCat, calculateGrandTotal, saveToLocalStorage, saveTransaction, currentSheet, updateCurrentSheet }} {...props} />
     )
 }
 
