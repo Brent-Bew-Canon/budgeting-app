@@ -13,13 +13,43 @@ import { useState, useEffect, useContext } from 'react';
 
 function App() {
   const [storeVals, setStoreVals] = useState([]);
+  const [sheetData, setSheetData] = useState({});
 
   useEffect(() => {
-    let data = localStorage.getItem('categories');
-    if (data) {
-      setStoreVals(JSON.parse(data));
-    }
+    getCategoriesAPI();
+    // let data = localStorage.getItem('categories');
+    getSheetDataAPI();
+    // if (data) {
+    //   setStoreVals(JSON.parse(data));
+    // }
   }, [])
+
+  const getSheetDataAPI = async () => {
+    const response = await fetch('http://localhost:3003/api/sheet/1');
+    const body = await response.json();
+    console.log('This is the sheet data:', body);
+    if (body) {
+      setSheetData(body[0]);
+    }
+    if (response.status !== 200) {
+      throw Error(body.message)
+    }
+    return body;
+  }
+
+  // call the api from useffect to get the data for the sheet
+  const getCategoriesAPI = async () => {
+    const response = await fetch('http://localhost:3003/api/category/1');
+    const body = await response.json();
+    console.log(body);
+    if (body) {
+      setStoreVals(body);
+    }
+    if (response.status !== 200) {
+      throw Error(body.message)
+    }
+    return body;
+  }
 
   const loopCategories = () => {
 
@@ -55,11 +85,11 @@ function App() {
   return (
     <>
       <BudgetProvider>
-        <Header />
+        <Header sheetData={sheetData} />
         {/* <Total /> */}
         {loopCategories()}
         <Add_Category />
-        <Add_Transaction />
+        <Add_Transaction categories={storeVals} />
         <Footer />
       </BudgetProvider>
     </>

@@ -33,6 +33,12 @@ router.get('/:sheet_id', async (req, res) => {
         // Find all cats associated with the specified sheet
         const categories = await Category.findAll({
             where: { sheet_id },
+            include: [
+                {
+                    model: Transaction, // Include the Transaction model
+                    attributes: ['id', 'name', 'amount'], // Specify the attributes you want to retrieve from the Transaction model
+                }
+            ]
         });
 
         res.status(200).json(categories);

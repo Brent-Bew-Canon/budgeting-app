@@ -6,6 +6,25 @@ const BudgetContextProvider = (props) => {
     const [total, setTotal] = useState(0);
     const [categoryTotal, setCategoryTotal] = useState([]);
 
+    const totalAPICall = async (theTotal) => {
+        try {
+            const response = await fetch(`http://localhost:3003/api/sheet/1`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    grand_total: theTotal,
+                })
+            });
+            const reply = await response.json();
+        } catch (error) {
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
+        }
+    }
+
     // function to save new data to local storage by appending to the existing data
     const saveToLocalStorage = (key, value) => {
         let existing = localStorage.getItem(key);
@@ -37,6 +56,7 @@ const BudgetContextProvider = (props) => {
             total += value;
         });
         setTotal(total);
+        totalAPICall(total);
     }, [categoryTotal]);
 
     return (

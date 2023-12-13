@@ -2,27 +2,47 @@ import { useState, useContext, useEffect } from "react";
 import { BudgetContext } from "../context/Context";
 
 
-function Add_Transaction() {
-    const { saveTransaction } = useContext(BudgetContext);
-
-    const [storeTransaction, setStoreTransaction] = useState({});
+function Add_Transaction(props) {
     const [category, setCategory] = useState('');
     const [transactionName, setTransactionName] = useState('');
     const [transactionAmount, setTransactionAmount] = useState(0);
-    const [storeVals, setStoreVals] = useState([]);
-
+    const [categoryData, setcategoryData] = useState([]);
 
     useEffect(() => {
         let data = localStorage.getItem('categories');
         if (data) {
-            setStoreVals(JSON.parse(data));
+            setcategoryData(JSON.parse(data));
         }
     }, [])
 
+    const addTransactionAPI = async () => {
+        try {
+            let categoryId = props.categories.find((element) => element.name === category);
+            const response = await fetch(`http://localhost:3003/api/transaction/${categoryId.id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: transactionName,
+                    amount: transactionAmount,
+                })
+            });
+            const reply = await response.json();
+            console.log(reply);
+            // refresh page
+            window.location.reload();
+        } catch (error) {
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
+        }
+    }
+
     const loopCategories = () => {
-        return (storeVals.length > 0 ?
-            storeVals.map((category, index) => {
-                return <option key={index}>{category.categoryName}</option>
+        return (props.categories.length > 0 ?
+            props.categories.map((category) => {
+                return <option key={category.id} id={category.id} name={category.name}>{category.name}</option>
             })
             :
             <></>
@@ -31,22 +51,12 @@ function Add_Transaction() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (category === undefined || transactionName === undefined || transactionAmount === undefined) {
+        if (category === undefined || transactionName === undefined || transactionAmount === undefined || category === '' || transactionName === '' || transactionAmount === 0) {
             alert('Please complete the form to add a transaction')
             return
         }
 
-        // find the category in the storeVals array and return the index of the matching category
-        let catIndex = storeVals.findIndex((element) => element.categoryName === category);
-        console.log(catIndex)
-        saveTransaction(catIndex, { transactionName, transactionAmount })
-
-        // put save transactions here................
-
-        // saveToLocalStorage('categories', storeTransaction)
-        // setStoreTransaction({})
-        // refresh page
-        window.location.reload();
+        addTransactionAPI();
     }
 
     return (
