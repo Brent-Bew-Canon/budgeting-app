@@ -2,7 +2,6 @@
 import Category from './components/Category';
 import Header from './components/Header';
 import Total from './components/Total';
-import BudgetProvider from './context/Context';
 import { BudgetContext } from './context/Context';
 import Footer from './components/Footer';
 import Add_Category from './components/Add_Category';
@@ -12,24 +11,43 @@ import { useState, useEffect, useContext } from 'react';
 
 
 function App() {
+
+  const { updateCurrentSheet, currentSheet, updateSheetInfo } = useContext(BudgetContext);
+
   const [storeVals, setStoreVals] = useState([]);
   const [sheetData, setSheetData] = useState({});
+  const [currSheet, setCurrSheet] = useState({});
 
   useEffect(() => {
     getCategoriesAPI();
-    // let data = localStorage.getItem('categories');
     getSheetDataAPI();
-    // if (data) {
-    //   setStoreVals(JSON.parse(data));
-    // }
+
+    console.log(currentSheet)
   }, [])
 
+  useEffect(() => {
+    getCurrentSheetAPI();
+    console.log(currentSheet)
+  }, [currentSheet])
+
+  const getCurrentSheetAPI = async () => {
+    try {
+      const response = await fetch('http://localhost:3003/api/book/1');
+      const reply = await response.json();
+      setCurrSheet(reply);
+      console.log("this is the current sheet here:", reply.current_sheet)
+    } catch (error) {
+      throw Error("Error getting the current sheet data from the database")
+    }
+  }
+
   const getSheetDataAPI = async () => {
-    const response = await fetch('http://localhost:3003/api/sheet/1');
+    const response = await fetch(`http://localhost:3003/api/sheet/${currSheet.current_sheet}`);
     const body = await response.json();
     console.log('This is the sheet data:', body);
     if (body) {
       setSheetData(body[0]);
+      updateSheetInfo(body);
     }
     if (response.status !== 200) {
       throw Error(body.message)
@@ -52,10 +70,8 @@ function App() {
   }
 
   const loopCategories = () => {
-
     // Retrieve colors from local storage or generate new ones
     const storedColors = JSON.parse(localStorage.getItem('categoryColors')) || {};
-
     return (
       storeVals.length > 0 ?
         storeVals.map((category, index) => {
@@ -66,7 +82,7 @@ function App() {
           storedColors[index] = backgroundColor;
           localStorage.setItem('categoryColors', JSON.stringify(storedColors));
 
-          return <Category key={index} category={category} backgroundColor={backgroundColor} />
+          return <Category key={index} category={category} backgroundColor={backgroundColor} currSheet={currentSheet} />
         })
         :
         <></>
@@ -84,14 +100,12 @@ function App() {
 
   return (
     <>
-      <BudgetProvider>
-        <Header sheetData={sheetData} />
-        {/* <Total /> */}
-        {loopCategories()}
-        <Add_Category />
-        <Add_Transaction categories={storeVals} />
-        <Footer />
-      </BudgetProvider>
+      <Header sheetData={sheetData} currSheet={currentSheet} />
+      {/* <Total /> */}
+      {loopCategories()}
+      <Add_Category currSheet={currentSheet} />
+      <Add_Transaction categories={storeVals} currSheet={currentSheet} />
+      <Footer />
     </>
   );
 }
