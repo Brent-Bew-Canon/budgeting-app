@@ -16,7 +16,7 @@ function App() {
 
   const [storeVals, setStoreVals] = useState([]);
   const [sheetData, setSheetData] = useState({});
-  const [currSheet, setCurrSheet] = useState({});
+  const [currSheet, setCurrSheet] = useState({ "current_sheet": 1 });
 
   useEffect(() => {
     getCategoriesAPI();
@@ -44,6 +44,7 @@ function App() {
   const getSheetDataAPI = async () => {
     const response = await fetch(`http://localhost:3003/api/sheet/${currSheet.current_sheet}`);
     const body = await response.json();
+    console.log('This is the api url', `http://localhost:3003/api/sheet/${currSheet.current_sheet}`);
     console.log('This is the sheet data:', body);
     if (body) {
       setSheetData(body[0]);
