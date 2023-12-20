@@ -58,7 +58,7 @@ function App() {
 
   // call the api from useffect to get the data for the sheet
   const getCategoriesAPI = async () => {
-    const response = await fetch('http://localhost:3003/api/category/1');
+    const response = await fetch(`http://localhost:3003/api/category/${currSheet.current_sheet}`);
     const body = await response.json();
     console.log(body);
     if (body) {

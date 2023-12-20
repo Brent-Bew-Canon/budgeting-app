@@ -87,11 +87,9 @@ function Header(props) {
 
     const title = () => {
         return (
-            props.sheetData.name ?
-                props.currSheet.name ?
-                    <h1 className="mx-auto py-4">{props.currSheet.name}</h1>
-                    :
-                    <h1 className="mx-auto py-4">{props.sheetData.name}</h1>
+            props.currSheet.name ?
+                <h1 className="mx-auto py-4">{props.currSheet.name}</h1>
+
                 :
                 <h1 className="mx-auto py-4">Expense Tracker</h1>
         )

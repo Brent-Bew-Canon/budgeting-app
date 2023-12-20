@@ -37,7 +37,7 @@ const BudgetContextProvider = (props) => {
                 body: JSON.stringify({ current_sheet: selectSheet.id })
             });
             const reply = await response.json();
-            console.log(reply);
+            console.log("here is reply from sheet change:", reply);
             setCurrentSheet(selectSheet);
         } catch (error) {
             throw Error("Error updating the current sheet data in the database")

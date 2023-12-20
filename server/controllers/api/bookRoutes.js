@@ -77,14 +77,14 @@ router.put('/:bookId', async (req, res) => {
     const { bookId } = req.params; // Get the bookId from the URL
     const { title, current_sheet } = req.body; // Update data for the book
 
-    // Find the sheet by ID
-    const book = await Sheet.findByPk(bookId);
+    // Find the book by ID
+    const book = await Book.findByPk(bookId);
 
     if (!book) {
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    // Update the sheet attributes
+    // Update the book attributes
     await book.update({
       title,
       current_sheet
