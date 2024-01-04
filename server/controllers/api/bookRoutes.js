@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Book, User, Sheet } = require('../../models');
+const { Book, User, Sheet, Category, Transaction } = require('../../models');
 
 router.post('/', async (req, res) => {
   try {
@@ -31,7 +31,22 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: Sheet, // Include the Sheet model
-          attributes: ['id', 'name', 'grand_total'], // Specify the attributes you want to retrieve from the Sheet model
+          // include id, name grand_total and categories
+          attributes: ['id', 'name', 'grand_total'],
+          include: [
+            {
+              model: Category, // Include the Category model
+              attributes: ['id', 'name'], // Specify the attributes you want to retrieve from the Category model
+              // include the transactions
+              include: [
+                {
+                  model: Transaction, // Include the Transaction model
+                  attributes: ['id', 'name', 'amount', 'category_id'], // Specify the attributes you want to retrieve from the Transaction model
+                },
+              ],
+            },
+          ],
+
         },
         {
           model: User, // Include the User model
@@ -52,11 +67,22 @@ router.get('/:id', async (req, res) => {
       include: [
         {
           model: Sheet, // Include the Sheet model
-          attributes: ['id', 'name', 'grand_total'], // Specify the attributes you want to retrieve from the Sheet model
-        },
-        {
-          model: User, // Include the User model
-          attributes: ['id', 'name', 'email'], // Specify the attributes you want to retrieve from the User model
+          // include id, name grand_total and categories
+          attributes: ['id', 'name', 'grand_total'],
+          include: [
+            {
+              model: Category, // Include the Category model
+              attributes: ['id', 'name', 'total'], // Specify the attributes you want to retrieve from the Category model
+              // include the transactions
+              include: [
+                {
+                  model: Transaction, // Include the Transaction model
+                  attributes: ['id', 'name', 'amount', 'category_id'], // Specify the attributes you want to retrieve from the Transaction model
+                },
+              ],
+            },
+          ],
+
         },
       ],
     });
