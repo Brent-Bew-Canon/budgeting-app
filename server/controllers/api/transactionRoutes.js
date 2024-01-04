@@ -7,19 +7,24 @@ router.post('/:category_id', async (req, res) => {
         const { category_id } = req.params; // Get the sheetId from the URL
         const { name, amount } = req.body; // Assuming you receive this data for the new cateogry
 
-        // Find the sheet by ID
+        // Find the category by ID
         const category = await Category.findByPk(category_id);
 
         if (!category) {
             return res.status(404).json({ message: 'Category not found' });
         }
 
-        // Create a new category associated with the found sheet
+        // Create a new transaction associated with the found sheet
         const newTransaction = await Transaction.create({
             name,
             amount,
             category_id: category.id, // Set the category_id explicitly when creating the sheet
         });
+
+        // Update the category's total
+        category.total += amount;
+        await category.save();
+
         res.status(200).json(newTransaction);
     } catch (err) {
         res.status(400).json(err);

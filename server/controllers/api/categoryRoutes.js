@@ -47,4 +47,29 @@ router.get('/:sheet_id', async (req, res) => {
     }
 });
 
+// update category total
+// /api/category/:category_id
+router.put('/:category_id', async (req, res) => {
+    try {
+        const { category_id } = req.params; // Get the category id from the URL
+        const { total } = req.body; // Update data for the sheet
+
+        // Find the category by ID
+        const category = await Category.findByPk(category_id);
+
+        if (!category) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+
+        // Update the sheet attributes
+        await category.update({
+            total
+        });
+
+        res.status(200).json(sheet);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
+
 module.exports = router;

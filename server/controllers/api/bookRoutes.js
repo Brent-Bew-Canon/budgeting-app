@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Book, User, Sheet } = require('../../models');
+const { Book, User, Sheet, Category, Transaction } = require('../../models');
 
 router.post('/', async (req, res) => {
   try {
@@ -31,7 +31,22 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: Sheet, // Include the Sheet model
-          attributes: ['id', 'name', 'grand_total'], // Specify the attributes you want to retrieve from the Sheet model
+          // include id, name grand_total and categories
+          attributes: ['id', 'name', 'grand_total'],
+          include: [
+            {
+              model: Category, // Include the Category model
+              attributes: ['id', 'name'], // Specify the attributes you want to retrieve from the Category model
+              // include the transactions
+              include: [
+                {
+                  model: Transaction, // Include the Transaction model
+                  attributes: ['id', 'name', 'amount', 'category_id'], // Specify the attributes you want to retrieve from the Transaction model
+                },
+              ],
+            },
+          ],
+
         },
         {
           model: User, // Include the User model
@@ -42,6 +57,68 @@ router.get('/', async (req, res) => {
     res.status(200).json(bookData);
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+// get route to get one book with all sheets
+router.get('/:id', async (req, res) => {
+  try {
+    const bookData = await Book.findByPk(req.params.id, {
+      include: [
+        {
+          model: Sheet, // Include the Sheet model
+          // include id, name grand_total and categories
+          attributes: ['id', 'name', 'grand_total'],
+          include: [
+            {
+              model: Category, // Include the Category model
+              attributes: ['id', 'name', 'total'], // Specify the attributes you want to retrieve from the Category model
+              // include the transactions
+              include: [
+                {
+                  model: Transaction, // Include the Transaction model
+                  attributes: ['id', 'name', 'amount', 'category_id'], // Specify the attributes you want to retrieve from the Transaction model
+                },
+              ],
+            },
+          ],
+
+        },
+      ],
+    });
+
+    if (!bookData) {
+      res.status(404).json({ message: 'No book found with this id!' });
+      return;
+    }
+
+    res.status(200).json(bookData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.put('/:bookId', async (req, res) => {
+  try {
+    const { bookId } = req.params; // Get the bookId from the URL
+    const { title, current_sheet } = req.body; // Update data for the book
+
+    // Find the book by ID
+    const book = await Book.findByPk(bookId);
+
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' });
+    }
+
+    // Update the book attributes
+    await book.update({
+      title,
+      current_sheet
+    });
+
+    res.status(200).json(book);
+  } catch (err) {
+    res.status(400).json(err);
   }
 });
 

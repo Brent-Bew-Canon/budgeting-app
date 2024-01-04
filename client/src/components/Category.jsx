@@ -6,7 +6,7 @@ import { BudgetContext } from "../context/Context";
 
 function Category(props) {
 
-    const { addToCat, calculateGrandTotal } = useContext(BudgetContext);
+    const { addToCat } = useContext(BudgetContext);
 
     const calculateTotal = () => {
         let catTotal = 0;

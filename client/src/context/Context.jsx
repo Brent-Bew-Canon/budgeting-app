@@ -6,6 +6,7 @@ const BudgetContextProvider = (props) => {
     const [total, setTotal] = useState(0);
     const [categoryTotal, setCategoryTotal] = useState([]);
     const [currentSheet, setCurrentSheet] = useState({});
+    const [sheetInfo, setSheetInfo] = useState([]);
 
     const totalAPICall = async (theTotal) => {
         try {
@@ -26,8 +27,37 @@ const BudgetContextProvider = (props) => {
         }
     }
 
-    const updateCurrentSheet = (sheet) => {
-        setCurrentSheet(sheet);
+    const updateCurrentSheetAPICall = async (selectSheet) => {
+        try {
+            const response = await fetch('http://localhost:3003/api/book/1', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ current_sheet: selectSheet.id })
+            });
+            const reply = await response.json();
+            console.log("here is reply from sheet change:", reply);
+            setCurrentSheet(selectSheet);
+        } catch (error) {
+            throw Error("Error updating the current sheet data in the database")
+        }
+    }
+
+    const updateSheetInfo = (sheetArray) => {
+        setSheetInfo(sheetArray);
+    }
+
+    // compare the sheet name to the sheet names in the sheetInfo array
+    // if there is a match, set the current sheet to that sheet
+    const updateCurrentSheet = (sheetName) => {
+        let selectSheet = {};
+        sheetInfo.forEach((sheet) => {
+            if (sheet.name === sheetName) {
+                selectSheet = sheet;
+            }
+        });
+        updateCurrentSheetAPICall(selectSheet);
     };
 
     // function to save new data to local storage by appending to the existing data
@@ -65,7 +95,7 @@ const BudgetContextProvider = (props) => {
     }, [categoryTotal]);
 
     return (
-        <BudgetContext.Provider value={{ total, addToCat, calculateGrandTotal, saveToLocalStorage, saveTransaction, currentSheet, updateCurrentSheet }} {...props} />
+        <BudgetContext.Provider value={{ total, addToCat, calculateGrandTotal, saveToLocalStorage, saveTransaction, currentSheet, updateCurrentSheet, updateSheetInfo }} {...props} />
     )
 }
 

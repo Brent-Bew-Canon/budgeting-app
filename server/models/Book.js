@@ -15,6 +15,11 @@ Book.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        current_sheet: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 1,
+        },
     },
     {
         sequelize,
